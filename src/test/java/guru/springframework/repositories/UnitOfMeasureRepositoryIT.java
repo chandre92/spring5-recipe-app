@@ -10,8 +10,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// Needs to be called as *IT because with *IntegrationTest ending will
+// interpreted by maven's unit test plugin as a unit test.
+// see maven-failsafe-plugin config in the pom.xml
 @DataJpaTest // Includes @ExtendWith({SpringExtension.class})
-class UnitOfMeasureRepositoryIntegrationTest {
+class UnitOfMeasureRepositoryIT {
 
     @Autowired
     UnitOfMeasureRepository unitOfMeasureRepository;
