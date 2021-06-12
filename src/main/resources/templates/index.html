@@ -43,11 +43,14 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Description</th>
+                                <th>View</th>
                             </tr>
                             </thead>
+                            <!-- First two mock rows will be removed by the thymeleaf at runtime -->
                             <tr th:remove="all">
                                 <td>123</td>
                                 <td>Tasty Goodness 1</td>
+                                <td><a href="#">View</a></td>
                             </tr>
                             <tr th:remove="all">
                                 <td>12333</td>
@@ -56,6 +59,8 @@
                             <tr th:each="recipe : ${recipes}">
                                 <td th:text="${recipe.id}"></td>
                                 <td th:text="${recipe.description}"></td>
+                                <!-- TODO make entire line clickable without additional column -->
+                                <td><a th:href="@{'/recipe/show/' + ${recipe.id}}">View</a></td>
                             </tr>
                         </table>
                     </div>

@@ -9,9 +9,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,6 +25,31 @@ class RecipeServiceImplTest {
 
     @Mock
     RecipeRepository recipeRepository;
+
+    @Test
+    void getRecipeById() {
+        // Arrange
+        Long id = 1L;
+        Recipe recipe = Recipe.builder().id(id).build();
+        when(recipeRepository.findById(id)).thenReturn(Optional.of(recipe));
+
+        // Act
+        Recipe byId = recipeService.findById(id);
+
+        // Assert
+        assertThat(byId).isEqualTo(recipe);
+        verify(recipeRepository).findById(id);
+        verifyNoMoreInteractions(recipeRepository);
+    }
+
+    @Test()
+    void getRecipeByWrongId() {
+        // Arrange
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        // Act && Assert
+        assertThrows(NoSuchElementException.class, () -> recipeService.findById(1L));
+    }
 
     @Test
     void getRecipes() {
