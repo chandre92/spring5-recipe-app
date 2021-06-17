@@ -59,7 +59,6 @@
                             <tr th:each="recipe : ${recipes}">
                                 <td th:text="${recipe.id}"></td>
                                 <td th:text="${recipe.description}"></td>
-                                <!-- TODO make entire line clickable without additional column -->
                                 <td><a th:href="@{'/recipe/show/' + ${recipe.id}}">View</a></td>
                             </tr>
                         </table>
