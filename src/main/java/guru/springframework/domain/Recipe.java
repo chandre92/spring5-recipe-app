@@ -1,23 +1,17 @@
 package guru.springframework.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Recipe {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Recipe extends BaseEntity {
 
     private String description;
     private Integer prepTime;
@@ -46,6 +40,23 @@ public class Recipe {
             joinColumns = @JoinColumn(name = "recipe_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
+
+    @Builder
+    public Recipe(Long id, String description, Integer prepTime, Integer cookTime, Integer servings, String source, String url, String directions, Set<Ingredient> ingredients, Byte[] image, Notes notes, Difficulty difficulty, Set<Category> categories) {
+        super(id);
+        this.description = description;
+        this.prepTime = prepTime;
+        this.cookTime = cookTime;
+        this.servings = servings;
+        this.source = source;
+        this.url = url;
+        this.directions = directions;
+        this.ingredients = ingredients;
+        this.image = image;
+        this.notes = notes;
+        this.difficulty = difficulty;
+        this.categories = categories;
+    }
 
     public void setNotes(Notes notes) {
         this.notes = notes;
