@@ -31,6 +31,7 @@ public class RecipeConverter implements TwoWaysConverter<RecipeCommand, Recipe> 
         recipeCommand.setPrepTime(source.getPrepTime());
         recipeCommand.setDescription(source.getDescription());
         recipeCommand.setDifficulty(source.getDifficulty());
+        recipeCommand.setDirections(source.getDirections());
         recipeCommand.setServings(source.getServings());
         recipeCommand.setSource(source.getSource());
         recipeCommand.setUrl(source.getUrl());
@@ -63,6 +64,7 @@ public class RecipeConverter implements TwoWaysConverter<RecipeCommand, Recipe> 
         recipe.setPrepTime(source.getPrepTime());
         recipe.setDescription(source.getDescription());
         recipe.setDifficulty(source.getDifficulty());
+        recipe.setDirections(source.getDirections());
         recipe.setServings(source.getServings());
         recipe.setSource(source.getSource());
         recipe.setUrl(source.getUrl());

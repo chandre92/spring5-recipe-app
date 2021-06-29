@@ -27,6 +27,7 @@ public class NotesConverter implements TwoWaysConverter<NotesCommand, Notes> {
 
         Notes notes = new Notes();
         notes.setId(source.getId());
+        notes.setRecipeNotes(source.getRecipeNotes());
 
         return notes;
     }
