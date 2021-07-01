@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Recipe Home</title>
+    <title>List Ingredients</title>
 
     <!-- Latest compiled and minified CSS -->
     <!-- href vs th:href see explanation for the src vs th:src below -->
@@ -34,17 +34,10 @@
             <div class="panel panel-primary">
 
                 <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-md-11 ">
-                            <h1 class="panel-title">My Recipes!</h1>
-                        </div>
-                        <div class="col-md-1">
-                            <a class="btn btn-default" href="#" th:href="@{'recipe/new'}" role="button">New</a>
-                        </div>
-                    </div>
+                    <h1 class="panel-title">Ingredients</h1>
                 </div>
                 <div class="panel-body">
-                    <div class="table-responsive" th:if="${not #lists.isEmpty(recipes)}">
+                    <div class="table-responsive" th:if="${not #lists.isEmpty(recipe.ingredientCommands)}">
                         <table class="table table-hover ">
                             <thead class="thead-inverse">
                             <tr>
@@ -56,21 +49,21 @@
                             <!-- First two mock rows will be removed by the thymeleaf at runtime -->
                             <tr th:remove="all">
                                 <td>123</td>
-                                <td>Tasty Goodness 1</td>
+                                <td>Ingredient 1</td>
                                 <td><a href="#">View</a> <a href="#">Update</a> <a href="#">Delete</a></td>
                             </tr>
                             <tr th:remove="all">
                                 <td>12333</td>
-                                <td>Tasty Goodness 2</td>
+                                <td>Ingredient 2</td>
                                 <td><a href="#">View</a> <a href="#">Update</a> <a href="#">Delete</a></td>
                             </tr>
-                            <tr th:each="recipe : ${recipes}">
-                                <td th:text="${recipe.id}">123</td>
-                                <td th:text="${recipe.description}">description</td>
+                            <tr th:each="ingredient : ${recipe.ingredientCommands}">
+                                <td th:text="${ingredient.id}">7777</td>
+                                <td th:text="${ingredient.amount} + ' ' + ${ingredient.unitOfMeasureCommand.description} + ' ' + ${ingredient.description}">Tasty Goodnees 3</td>
                                 <td>
-                                    <a th:href="@{'/recipe/' + ${recipe.id} + '/show/'}">View</a>
-                                    <a th:href="@{'/recipe/' + ${recipe.id} + '/update/'}">Update</a>
-                                    <a th:href="@{'/recipe/' + ${recipe.id} + '/delete/'}">Delete</a>
+                                    <a th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/show/'}">View</a>
+                                    <a th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/update/'}">Update</a>
+                                    <a th:href="@{'/recipe/' + ${recipe.id} + '/ingredient/' + ${ingredient.id} + '/delete/'}">Delete</a>
                                 </td>
                             </tr>
                         </table>
