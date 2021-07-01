@@ -115,4 +115,17 @@ class RecipeServiceImplTest {
         verify(recipeConverter).convertToCommand(recipe);
         verifyNoMoreInteractions(recipeConverter, recipeRepository);
     }
+
+    @Test
+    void deleteById() {
+        // Arrange
+        Long id = 1L;
+
+        // Act
+        recipeService.deleteById(id);
+
+        // Assert
+        verify(recipeRepository).deleteById(id);
+        verifyNoMoreInteractions(recipeRepository);
+    }
 }

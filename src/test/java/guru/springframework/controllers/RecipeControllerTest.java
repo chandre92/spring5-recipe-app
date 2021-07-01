@@ -101,4 +101,17 @@ public class RecipeControllerTest {
         verify(recipeService).findCommandById(id);
         verifyNoMoreInteractions(recipeService);
     }
+
+    @Test
+    void deleteById() throws Exception {
+        // Arrange
+        Long id = 2L;
+
+        // Act && Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/" + id + "/delete"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/"));
+        verify(recipeService).deleteById(id);
+        verifyNoMoreInteractions(recipeService);
+    }
 }

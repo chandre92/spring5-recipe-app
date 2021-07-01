@@ -50,17 +50,21 @@
                             <tr th:remove="all">
                                 <td>123</td>
                                 <td>Tasty Goodness 1</td>
-                                <td><a href="#">View</a> <a href="#">Update</a></td>
+                                <td><a href="#">View</a> <a href="#">Update</a> <a href="#">Delete</a></td>
                             </tr>
                             <tr th:remove="all">
                                 <td>12333</td>
                                 <td>Tasty Goodness 2</td>
-                                <td><a href="#">View</a> <a href="#">Update</a></td>
+                                <td><a href="#">View</a> <a href="#">Update</a> <a href="#">Delete</a></td>
                             </tr>
                             <tr th:each="recipe : ${recipes}">
                                 <td th:text="${recipe.id}"></td>
                                 <td th:text="${recipe.description}"></td>
-                                <td><a th:href="@{'/recipe/' + ${recipe.id} + '/show/'}">View</a> <a th:href="@{'/recipe/' + ${recipe.id} + '/update/'}">Update</a></td>
+                                <td>
+                                    <a th:href="@{'/recipe/' + ${recipe.id} + '/show/'}">View</a>
+                                    <a th:href="@{'/recipe/' + ${recipe.id} + '/update/'}">Update</a>
+                                    <a th:href="@{'/recipe/' + ${recipe.id} + '/delete/'}">Delete</a>
+                                </td>
                             </tr>
                         </table>
                     </div>
