@@ -1,5 +1,6 @@
 package guru.springframework.commands;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class NotesCommand extends AbstractCommand {
     private String recipeNotes;
 }

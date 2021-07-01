@@ -1,6 +1,7 @@
 package guru.springframework.commands;
 
 import guru.springframework.domain.Difficulty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class RecipeCommand extends AbstractDescribableCommand {
     private Integer prepTime;
     private Integer cookTime;

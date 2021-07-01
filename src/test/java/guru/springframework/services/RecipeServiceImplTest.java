@@ -1,5 +1,7 @@
 package guru.springframework.services;
 
+import guru.springframework.commands.RecipeCommand;
+import guru.springframework.converters.RecipeConverter;
 import guru.springframework.domain.Recipe;
 import guru.springframework.repositories.RecipeRepository;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,9 @@ class RecipeServiceImplTest {
 
     @Mock
     RecipeRepository recipeRepository;
+
+    @Mock
+    RecipeConverter recipeConverter;
 
     @Test
     void getRecipeById() {
@@ -65,5 +70,49 @@ class RecipeServiceImplTest {
         assertThat(recipes).contains(recipe);
         verify(recipeRepository, times(1)).findAll();
         verifyNoMoreInteractions(recipeRepository);
+    }
+
+    @Test
+    void saveRecipeCommand() {
+        // Arrange
+        RecipeCommand recipeCommand = new RecipeCommand();
+        Long id = 2L;
+        recipeCommand.setId(id);
+
+        Recipe recipe = new Recipe();
+        recipe.setId(id);
+
+        when(recipeConverter.convertToDomain(recipeCommand)).thenReturn(recipe);
+        when(recipeRepository.save(recipe)).thenReturn(recipe);
+        when(recipeConverter.convertToCommand(recipe)).thenReturn(recipeCommand);
+
+        // Act
+        RecipeCommand saveRecipeCommand = recipeService.saveRecipeCommand(recipeCommand);
+
+        assertThat(saveRecipeCommand).isEqualTo(recipeCommand);
+        verify(recipeConverter).convertToDomain(recipeCommand);
+        verify(recipeRepository).save(recipe);
+        verify(recipeConverter).convertToCommand(recipe);
+        verifyNoMoreInteractions(recipeConverter, recipeRepository);
+    }
+
+    @Test
+    void findCommandById() {
+        // Arrange
+        Long recipeId = 25L;
+        Recipe recipe = new Recipe();
+        recipe.setId(recipeId);
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
+
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(recipeId);
+        when(recipeConverter.convertToCommand(recipe)).thenReturn(recipeCommand);
+
+        // Act
+        RecipeCommand commandById = recipeService.findCommandById(recipeId);
+        assertThat(commandById).isEqualTo(recipeCommand);
+        verify(recipeRepository).findById(recipeId);
+        verify(recipeConverter).convertToCommand(recipe);
+        verifyNoMoreInteractions(recipeConverter, recipeRepository);
     }
 }
