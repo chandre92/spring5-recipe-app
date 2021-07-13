@@ -4,6 +4,8 @@ import guru.springframework.commands.IngredientCommand;
 import guru.springframework.domain.Ingredient;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class IngredientConverter implements TwoWaysConverter<IngredientCommand, Ingredient> {
     private final UnitOfMeasureConverter unitOfMeasureConverter;
@@ -23,6 +25,10 @@ public class IngredientConverter implements TwoWaysConverter<IngredientCommand, 
         ingredientCommand.setAmount(source.getAmount());
         ingredientCommand.setDescription(source.getDescription());
         ingredientCommand.setUnitOfMeasureCommand(unitOfMeasureConverter.convertToCommand(source.getUnitOfMeasure()));
+        // TODO: 13.07.21 cover by test
+        if (source.getRecipe() != null) {
+            ingredientCommand.setRecipeId(source.getRecipe().getId());
+        }
 
         return ingredientCommand;
     }

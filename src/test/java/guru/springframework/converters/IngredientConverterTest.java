@@ -3,6 +3,7 @@ package guru.springframework.converters;
 import guru.springframework.commands.IngredientCommand;
 import guru.springframework.commands.UnitOfMeasureCommand;
 import guru.springframework.domain.Ingredient;
+import guru.springframework.domain.Recipe;
 import guru.springframework.domain.UnitOfMeasure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ class IngredientConverterTest {
     private static final String DESCRIPTION = "Cheeseburger";
     private static final Long ID_VALUE = 1L;
     private static final Long UOM_ID = 2L;
+    private static final Long RECIPE_ID = 3L;
     private static final String UOM_DESCRIPTION = "uom description";
 
     private Ingredient expectedIngredient;
@@ -45,6 +47,10 @@ class IngredientConverterTest {
         unitOfMeasure.setId(UOM_ID);
         unitOfMeasure.setDescription(UOM_DESCRIPTION);
         expectedIngredient.setUnitOfMeasure(unitOfMeasure);
+
+        Recipe recipe = new Recipe();
+        recipe.setId(RECIPE_ID);
+        expectedIngredient.setRecipe(recipe);
 
         expectedIngredientCommand = new IngredientCommand();
         expectedIngredientCommand.setId(ID_VALUE);
@@ -94,6 +100,7 @@ class IngredientConverterTest {
                 .isEqualTo(expectedIngredient.getUnitOfMeasure().getDescription());
         assertThat(command.getUnitOfMeasureCommand().getId())
                 .isEqualTo(expectedIngredient.getUnitOfMeasure().getId());
+        assertThat(command.getRecipeId()).isEqualTo(RECIPE_ID);
     }
 
     @Test
