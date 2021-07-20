@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Data
+@ToString(exclude = {"recipe"})
 @EqualsAndHashCode(exclude = {"recipe"}, callSuper = true)
 @Entity
 public class Ingredient extends BaseEntity {
