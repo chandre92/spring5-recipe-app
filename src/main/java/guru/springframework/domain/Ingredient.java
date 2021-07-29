@@ -31,4 +31,13 @@ public class Ingredient extends BaseEntity {
         this.unitOfMeasure = unitOfMeasure;
     }
 
+    @Override
+    public String toString() {
+        return "Ingredient{" +
+                "description='" + description + '\'' +
+                ", amount=" + amount +
+                ", recipe=" + (recipe == null ? null : recipe.getId()) +
+                ", unitOfMeasure=" + unitOfMeasure +
+                '}';
+    }
 }

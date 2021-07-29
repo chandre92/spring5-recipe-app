@@ -15,4 +15,11 @@ public class Notes extends BaseEntity {
     @Lob
     private String recipeNotes;
 
+    @Override
+    public String toString() {
+        return "Notes{" +
+                "recipe=" + (recipe == null ? null : recipe.getId()) +
+                ", recipeNotes='" + recipeNotes + '\'' +
+                '}';
+    }
 }
