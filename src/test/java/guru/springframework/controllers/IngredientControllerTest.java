@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith({MockitoExtension.class})
@@ -123,6 +124,34 @@ class IngredientControllerTest {
         verify(ingredientService).saveIngredientCommand(any());
         verifyNoMoreInteractions(ingredientService);
         verifyNoInteractions(unitOfMeasureService, recipeService);
+    }
 
+    @Test
+    void newIngredient_exceptionOnWrongRecipeId() {
+        // Arrange
+        Long notExistingId = 123L;
+
+        // Act && Assert
+        assertThrows(IllegalArgumentException.class, () -> ingredientController.newIngredient(notExistingId, null));
+        verify(recipeService).isRecipeExists(notExistingId);
+        verifyNoMoreInteractions(recipeService);
+        verifyNoInteractions(unitOfMeasureService);
+    }
+
+    @Test
+    public void newIngredient() throws Exception {
+        // Arrange
+        Long recipeId = 1L;
+        when(recipeService.isRecipeExists(recipeId)).thenReturn(true);
+        when(unitOfMeasureService.listAll()).thenReturn(Set.of(new UnitOfMeasureCommand()));
+
+        // Act && Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/" + recipeId + "/ingredient/new"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("ingredient/ingredientform"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("ingredient", "uomList"));
+        verify(recipeService).isRecipeExists(recipeId);
+        verify(unitOfMeasureService).listAll();
+        verifyNoMoreInteractions(recipeService, unitOfMeasureService);
     }
 }

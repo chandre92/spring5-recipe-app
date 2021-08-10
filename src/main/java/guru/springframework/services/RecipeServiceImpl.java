@@ -56,4 +56,9 @@ public class RecipeServiceImpl implements RecipeService {
     public void deleteById(Long id) {
         recipeRepository.deleteById(id);
     }
+
+    @Override
+    public boolean isRecipeExists(Long recipeId) {
+        return recipeRepository.existsById(recipeId);
+    }
 }

@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -126,6 +126,36 @@ class RecipeServiceImplTest {
 
         // Assert
         verify(recipeRepository).deleteById(id);
+        verifyNoMoreInteractions(recipeRepository);
+    }
+
+    @Test
+    void isRecipeExists_true() {
+        // Arrange
+        Long recipeId = 1L;
+        when(recipeRepository.existsById(recipeId)).thenReturn(true);
+
+        // Act
+        boolean recipeExists = recipeService.isRecipeExists(recipeId);
+
+        // Assert
+        assertTrue(recipeExists);
+        verify(recipeRepository).existsById(recipeId);
+        verifyNoMoreInteractions(recipeRepository);
+    }
+
+    @Test
+    void isRecipeExists_false() {
+        // Arrange
+        Long recipeId = 1L;
+        when(recipeRepository.existsById(recipeId)).thenReturn(false);
+
+        // Act
+        boolean recipeExists = recipeService.isRecipeExists(recipeId);
+
+        // Assert
+        assertFalse(recipeExists);
+        verify(recipeRepository).existsById(recipeId);
         verifyNoMoreInteractions(recipeRepository);
     }
 }

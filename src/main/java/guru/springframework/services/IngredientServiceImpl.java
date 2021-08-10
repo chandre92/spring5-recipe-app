@@ -39,7 +39,6 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public IngredientCommand saveIngredientCommand(IngredientCommand ingredientCommand) {
-        // TODO: 20.07.21 add some default error page
         Recipe recipe = recipeRepository.findById(ingredientCommand.getRecipeId())
                 .orElseThrow();
 
@@ -47,24 +46,32 @@ public class IngredientServiceImpl implements IngredientService {
                 .filter(ingredient -> Objects.equals(ingredient.getId(), ingredientCommand.getId()))
                 .findFirst();
 
+        IngredientCommand savedIngredient;
         if (ingredientMatch.isPresent()) {
-            Ingredient ingredient = ingredientMatch.get();
-            ingredient.setDescription(ingredientCommand.getDescription());
-            ingredient.setAmount(ingredientCommand.getAmount());
-            ingredient.setUnitOfMeasure(
-                    unitOfMeasureRepository
-                            .findById(ingredientCommand.getUnitOfMeasureCommand().getId())
-                            .orElseThrow()
-            );
+            savedIngredient = updateIngredient(ingredientMatch.get(), ingredientCommand);
         } else {
-            recipe.addIngredient(ingredientConverter.convertToDomain(ingredientCommand));
+            savedIngredient = addIngredient(recipe, ingredientCommand);
         }
 
-        Recipe savedRecipe = recipeRepository.save(recipe);
+        return savedIngredient;
+    }
 
-        return ingredientConverter.convertToCommand(savedRecipe.getIngredients().stream()
-                .filter(recipeIngredient -> recipeIngredient.getId().equals(ingredientCommand.getId()))
-                .findFirst()
-                .orElseThrow());
+    private IngredientCommand updateIngredient(Ingredient ingredient, IngredientCommand ingredientCommand) {
+        ingredient.setDescription(ingredientCommand.getDescription());
+        ingredient.setAmount(ingredientCommand.getAmount());
+        ingredient.setUnitOfMeasure(
+                unitOfMeasureRepository
+                        .findById(ingredientCommand.getUnitOfMeasureCommand().getId())
+                        .orElseThrow()
+        );
+
+        return ingredientConverter.convertToCommand(ingredientRepository.save(ingredient));
+    }
+
+    private IngredientCommand addIngredient(Recipe recipe, IngredientCommand ingredientCommand) {
+        Ingredient newIngredient = ingredientConverter.convertToDomain(ingredientCommand);
+
+        recipe.addIngredient(newIngredient);
+        return ingredientConverter.convertToCommand(ingredientRepository.save(newIngredient));
     }
 }

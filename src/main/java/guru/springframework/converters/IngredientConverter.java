@@ -39,15 +39,6 @@ public class IngredientConverter implements TwoWaysConverter<IngredientCommand, 
 
         Ingredient ingredient = new Ingredient();
 
-        // TODO: 29.07.21 do we really need it? Looks like no but need to test
-        // TODO: 29.07.21 if need - cover by the unit test!
-/*        if (source.getRecipeId() != null) {
-            Recipe recipe = new Recipe();
-            recipe.setId(source.getRecipeId());
-            ingredient.setRecipe(recipe);
-            recipe.addIngredient(ingredient);
-        }*/
-
         ingredient.setId(source.getId());
         ingredient.setAmount(source.getAmount());
         ingredient.setDescription(source.getDescription());

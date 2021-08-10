@@ -14,13 +14,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalAnswers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -95,9 +94,7 @@ class IngredientServiceImplTest {
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> ingredientService.saveIngredientCommand(ingredientCommand));
         verify(recipeRepository).findById(recipeId);
-        verifyNoMoreInteractions(recipeRepository);
-        verifyNoMoreInteractions(unitOfMeasureRepository);
-        verifyNoMoreInteractions(ingredientConverter);
+        verifyNoMoreInteractions(recipeRepository, unitOfMeasureRepository, ingredientConverter);
     }
 
     @Test
@@ -114,6 +111,7 @@ class IngredientServiceImplTest {
         UnitOfMeasure newUnitOfMeasure = new UnitOfMeasure();
         newUnitOfMeasure.setId(newUnitOfMeasureId);
         when(unitOfMeasureRepository.findById(newUnitOfMeasureId)).thenReturn(Optional.of(newUnitOfMeasure));
+        when(ingredientRepository.save(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         // Act
         IngredientCommand ingredientCommandToSave = createFullyInitIngredientCommand(
@@ -127,11 +125,11 @@ class IngredientServiceImplTest {
         assertThat(ingredientCommandSaved.getAmount()).isEqualTo(ingredientAmount);
         assertThat(ingredientCommandSaved.getUnitOfMeasureCommand().getId()).isEqualTo(newUnitOfMeasureId);
         verify(recipeRepository).findById(recipeId);
-        verify(recipeRepository).save(recipe);
+        verify(ingredientRepository).save(recipe.getIngredients().iterator().next());
         verify(unitOfMeasureRepository).findById(newUnitOfMeasureId);
         verify(ingredientConverter).convertToCommand(recipe.getIngredients().iterator().next());
 
-        verifyNoMoreInteractions(recipeRepository, unitOfMeasureRepository, ingredientConverter);
+        verifyNoMoreInteractions(recipeRepository, unitOfMeasureRepository, ingredientConverter, ingredientRepository);
     }
 
     @Test
@@ -147,6 +145,7 @@ class IngredientServiceImplTest {
         IngredientCommand ingredientCommandToSave = createFullyInitIngredientCommand(
                 recipeId, newIngredientId, "newDescription", BigDecimal.TEN, unitOfMeasureId
         );
+        when(ingredientRepository.save(any())).thenAnswer(AdditionalAnswers.returnsFirstArg());
 
         // Act
         ingredientService.saveIngredientCommand(ingredientCommandToSave);
@@ -159,7 +158,7 @@ class IngredientServiceImplTest {
                 .collect(Collectors.toList());
         assertThat(ingredientsIds).contains(ingredientId, newIngredientId);
         verify(recipeRepository).findById(recipeId);
-        verify(recipeRepository).save(recipe);
+        verify(ingredientRepository).save(new ArrayList<>(recipe.getIngredients()).get(0));
         verify(ingredientConverter).convertToDomain(ingredientCommandToSave);
         verify(ingredientConverter).convertToCommand(recipe.getIngredients().iterator().next());
 
@@ -179,7 +178,6 @@ class IngredientServiceImplTest {
 
         recipe.addIngredient(ingredient);
         when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
-        when(recipeRepository.save(recipe)).thenReturn(recipe);
 
         return recipe;
     }
