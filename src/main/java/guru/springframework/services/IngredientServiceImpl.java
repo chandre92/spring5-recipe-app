@@ -16,12 +16,15 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class IngredientServiceImpl implements IngredientService {
+    public static final String NO_RECIPE_MESSAGE = "Recipe with id %s doesn't exits";
+    public static final String NO_INGREDIENT_IN_RECIPE_MESSAGE = "Recipe doesn't have ingredient with id %s";
+
     private final IngredientRepository ingredientRepository;
+    private final RecipeRepository recipeRepository;
+    private final UnitOfMeasureRepository unitOfMeasureRepository;
+
     private final IngredientConverter ingredientConverter;
 
-    private final RecipeRepository recipeRepository;
-
-    private final UnitOfMeasureRepository unitOfMeasureRepository;
 
     public IngredientServiceImpl(IngredientRepository ingredientRepository, IngredientConverter ingredientConverter, RecipeRepository recipeRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
         this.ingredientRepository = ingredientRepository;
@@ -33,7 +36,7 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public IngredientCommand findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId) {
         return ingredientConverter.convertToCommand(
-                ingredientRepository.findByRecipeIdAndAndId(recipeId, ingredientId)
+                ingredientRepository.findByRecipeIdAndId(recipeId, ingredientId)
         );
     }
 
@@ -54,6 +57,20 @@ public class IngredientServiceImpl implements IngredientService {
         }
 
         return savedIngredient;
+    }
+
+    @Override
+    public void deleteById(Long recipeId, Long ingredientId) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException(String.format(NO_RECIPE_MESSAGE, recipeId)));
+        Ingredient ingredientMatch = recipe.getIngredients().stream()
+                .filter(ingredient -> ingredient.getId().equals(ingredientId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(String.format(NO_INGREDIENT_IN_RECIPE_MESSAGE, ingredientId)));
+
+        recipe.getIngredients().remove(ingredientMatch);
+        recipeRepository.save(recipe);
+        ingredientRepository.delete(ingredientMatch);
     }
 
     private IngredientCommand updateIngredient(Ingredient ingredient, IngredientCommand ingredientCommand) {

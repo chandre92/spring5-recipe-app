@@ -154,4 +154,19 @@ class IngredientControllerTest {
         verify(unitOfMeasureService).listAll();
         verifyNoMoreInteractions(recipeService, unitOfMeasureService);
     }
+
+    @Test
+    public void deleteIngredient() throws Exception {
+        // Arrange
+        Long recipeId = 1L;
+        Long ingredientId = 2L;
+
+        // Act && Assert
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/" + recipeId + "/ingredient/" + ingredientId + "/delete"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/" + recipeId + "/ingredients"));
+        verify(ingredientService).deleteById(recipeId, ingredientId);
+        verifyNoMoreInteractions(ingredientService);
+        verifyNoInteractions(recipeService, unitOfMeasureService);
+    }
 }

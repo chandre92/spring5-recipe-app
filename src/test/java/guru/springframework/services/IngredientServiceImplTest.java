@@ -68,7 +68,7 @@ class IngredientServiceImplTest {
         recipe.addIngredient(searchedIngredient);
         recipe.addIngredient(thirdIngredient);
 
-        when(ingredientRepository.findByRecipeIdAndAndId(recipeId, searchedIngredientId)).thenReturn(searchedIngredient);
+        when(ingredientRepository.findByRecipeIdAndId(recipeId, searchedIngredientId)).thenReturn(searchedIngredient);
 
         // Act
         IngredientCommand ingredientCommand = ingredientService.findByRecipeIdAndIngredientId(recipeId, searchedIngredientId);
@@ -76,7 +76,7 @@ class IngredientServiceImplTest {
         // Assert
         assertThat(ingredientCommand.getId()).isEqualTo(searchedIngredientId);
         assertThat(ingredientCommand.getRecipeId()).isEqualTo(recipeId);
-        verify(ingredientRepository).findByRecipeIdAndAndId(recipeId, searchedIngredientId);
+        verify(ingredientRepository).findByRecipeIdAndId(recipeId, searchedIngredientId);
         verifyNoMoreInteractions(ingredientRepository);
         verify(ingredientConverter).convertToCommand(searchedIngredient);
     }
@@ -166,6 +166,62 @@ class IngredientServiceImplTest {
         verifyNoInteractions(unitOfMeasureRepository);
     }
 
+    @Test
+    public void deleteById_noRecipe() {
+        // Arrange
+        Long recipeId = 1L;
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.empty());
+
+        // Act && Assert
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> ingredientService.deleteById(recipeId, null),
+                String.format(IngredientServiceImpl.NO_RECIPE_MESSAGE, recipeId));
+        verify(recipeRepository).findById(recipeId);
+        verifyNoMoreInteractions(recipeRepository);
+        verifyNoInteractions(ingredientRepository, unitOfMeasureRepository, ingredientConverter);
+    }
+
+    @Test
+    public void deleteById_noIngredient() {
+        // Arrange
+        Long recipeId = 1L;
+        Long ingredientId = 2L;
+
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(new Recipe()));
+
+        // Act && Assert
+        Assertions.assertThrows(IllegalArgumentException.class,
+                () -> ingredientService.deleteById(recipeId, ingredientId),
+                String.format(IngredientServiceImpl.NO_INGREDIENT_IN_RECIPE_MESSAGE, ingredientId));
+        verify(recipeRepository).findById(recipeId);
+        verifyNoMoreInteractions(recipeRepository);
+        verifyNoInteractions(ingredientRepository, unitOfMeasureRepository, ingredientConverter);
+    }
+
+    @Test
+    public void deleteById() {
+        // Arrange
+        Long recipeId = 1L;
+        Long ingredientId = 2L;
+        Ingredient ingredient = new Ingredient();
+        ingredient.setId(ingredientId);
+
+        Recipe recipe = new Recipe();
+        recipe.setId(recipeId);
+        recipe.addIngredient(ingredient);
+
+        when(recipeRepository.findById(recipeId)).thenReturn(Optional.of(recipe));
+
+        // Act
+        ingredientService.deleteById(recipeId, ingredientId);
+
+        // Assert
+        verify(recipeRepository).findById(recipeId);
+        verify(recipeRepository).save(recipe);
+        verify(ingredientRepository).delete(ingredient);
+        verifyNoMoreInteractions(recipeRepository, ingredientRepository);
+        verifyNoInteractions(unitOfMeasureRepository, ingredientConverter);
+    }
 
     private Recipe initStartRecipeState(Long recipeId, Long ingredientId) {
         Recipe recipe = new Recipe();

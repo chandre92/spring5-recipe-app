@@ -28,7 +28,7 @@ public class IngredientRepositoryIT {
 
         // Act
         Ingredient searchResult = ingredientRepository
-                .findByRecipeIdAndAndId(savedRecipe.getId(), expectedIngredient.getId());
+                .findByRecipeIdAndId(savedRecipe.getId(), expectedIngredient.getId());
 
         // Assert
         assertThat(searchResult.getId()).isEqualTo(expectedIngredient.getId());
