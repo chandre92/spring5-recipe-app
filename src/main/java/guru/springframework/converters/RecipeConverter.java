@@ -36,6 +36,7 @@ public class RecipeConverter implements TwoWaysConverter<RecipeCommand, Recipe> 
         recipeCommand.setSource(source.getSource());
         recipeCommand.setUrl(source.getUrl());
         recipeCommand.setNotesCommand(notesConverter.convertToCommand(source.getNotes()));
+        recipeCommand.setImage(source.getImage());
 
         Optional.ofNullable(source.getCategories())
                 .orElse(Collections.emptySet())
@@ -69,6 +70,7 @@ public class RecipeConverter implements TwoWaysConverter<RecipeCommand, Recipe> 
         recipe.setSource(source.getSource());
         recipe.setUrl(source.getUrl());
         recipe.setNotes(notesConverter.convertToDomain(source.getNotesCommand()));
+        recipe.setImage(source.getImage());
 
         Optional.ofNullable(source.getCategoryCommands())
                 .orElse(Collections.emptySet())

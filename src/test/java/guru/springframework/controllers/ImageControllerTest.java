@@ -1,6 +1,7 @@
 package guru.springframework.controllers;
 
 import guru.springframework.commands.RecipeCommand;
+import guru.springframework.domain.Recipe;
 import guru.springframework.services.ImageService;
 import guru.springframework.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,12 +10,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,5 +70,27 @@ class ImageControllerTest {
         verify(imageService).saveImageService(recipeId, file);
         verifyNoMoreInteractions(imageService);
         verifyNoInteractions(recipeService);
+    }
+
+    @Test
+    void getImage() throws Exception {
+        // Arrange
+        Long recipeId = 1L;
+        Byte[] image = new Byte[]{'a', 'b', 'c'};
+        Recipe recipe = new Recipe();
+        recipe.setId(recipeId);
+        recipe.setImage(image);
+
+        when(recipeService.findById(recipeId)).thenReturn(recipe);
+
+        // Act && Assert
+        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.get("/recipe/" + recipeId + "/recipeimage"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse();
+
+        assertThat(image.length).isEqualTo(response.getContentAsByteArray().length);
+        verify(recipeService).findById(recipeId);
+        verifyNoMoreInteractions(recipeService);
+        verifyNoInteractions(imageService);
     }
 }
