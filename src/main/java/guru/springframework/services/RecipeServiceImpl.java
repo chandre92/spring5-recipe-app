@@ -3,6 +3,7 @@ package guru.springframework.services;
 import guru.springframework.commands.RecipeCommand;
 import guru.springframework.converters.RecipeConverter;
 import guru.springframework.domain.Recipe;
+import guru.springframework.exception.NotFoundException;
 import guru.springframework.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,8 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe findById(Long id) {
-        return recipeRepository.findById(id).orElseThrow();
+        return recipeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Recipe not found"));
     }
 
     @Override

@@ -3,6 +3,7 @@ package guru.springframework.services;
 import guru.springframework.commands.RecipeCommand;
 import guru.springframework.converters.RecipeConverter;
 import guru.springframework.domain.Recipe;
+import guru.springframework.exception.NotFoundException;
 import guru.springframework.repositories.RecipeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,7 +54,7 @@ class RecipeServiceImplTest {
         when(recipeRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act && Assert
-        assertThrows(NoSuchElementException.class, () -> recipeService.findById(1L));
+        assertThrows(NotFoundException.class, () -> recipeService.findById(1L));
     }
 
     @Test

@@ -2,6 +2,7 @@ package guru.springframework.controllers;
 
 import guru.springframework.commands.RecipeCommand;
 import guru.springframework.domain.Recipe;
+import guru.springframework.exception.NotFoundException;
 import guru.springframework.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,16 @@ public class RecipeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/" + stringId + "/show/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("recipe/show"));
+    }
+
+    @Test
+    void getRecipeNotFound() throws Exception {
+        // Arrange
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        // Act
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/show/"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
