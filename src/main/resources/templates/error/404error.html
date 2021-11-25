@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>400 Bad Request Error</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <!-- href vs th:href see explanation for the src vs th:src below -->
+    <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+            th:href="@{/webjars/bootstrap/3.4.1/css/bootstrap.min.css}"
+            integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu"
+            crossorigin="anonymous"
+    >
+
+    <script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <!-- The difference between "src" and "th:src" is that the "src" works when open file
+         as a plain html file in the browser and "th:src" works when template handled by
+         the thymeleaf framework and overwrites the "src" -->
+    <script
+            src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+            th:src="@{/webjars/bootstrap/3.4.1/js/bootstrap.min.js}"
+            integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+            crossorigin="anonymous"
+    ></script>
+</head>
+<body>
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h1>400 Bad Request</h1>
+            <!--/*@thymesVar id="exception" type="java.lang.Exception"*/-->
+            <p th:text="${exception.message}"></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
