@@ -6,8 +6,11 @@ import guru.springframework.services.RecipeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 @Controller
 public class RecipeController {
@@ -40,7 +43,13 @@ public class RecipeController {
     }
 
     @PostMapping("recipe")
-    public String saveOrUpdate(@ModelAttribute RecipeCommand recipeCommand) {
+    // @ModelAttribute("recipe") here for cases when has some validation errors added by @Valid annotation
+    // so the recipe will be added to the model and re-displayed on the form.
+    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand recipeCommand, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "recipe/recipeform";
+        }
         RecipeCommand savedCommand = recipeService.saveRecipeCommand(recipeCommand);
 
         return "redirect:/recipe/" + savedCommand.getId() + "/show";

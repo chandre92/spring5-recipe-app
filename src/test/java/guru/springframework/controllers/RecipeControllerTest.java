@@ -85,9 +85,11 @@ public class RecipeControllerTest {
         // Arrange
         Long id = 2L;
         String description = "description";
+        String directions = "directions";
 
         RecipeCommand incomeCommand = new RecipeCommand();
         incomeCommand.setDescription(description);
+        incomeCommand.setDirections(directions);
 
         RecipeCommand resultCommand = new RecipeCommand();
         resultCommand.setId(id);
@@ -97,15 +99,28 @@ public class RecipeControllerTest {
 
         // Act && Assert
         mockMvc.perform(MockMvcRequestBuilders.post("/recipe")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("id", "")
-                .param("description", description)
-        )
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", "")
+                        .param("description", description)
+                        .param("directions", directions)
+                )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.view().name("redirect:/recipe/" + id + "/show"));
 
         verify(recipeService).saveRecipeCommand(incomeCommand);
         verifyNoMoreInteractions(recipeService);
+    }
+
+    @Test
+    public void postNewRecipeFormFailValidation() throws Exception {
+        // Act && Assert
+        mockMvc.perform(MockMvcRequestBuilders.post("/recipe")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id", "")
+                        .param("description", "description"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("recipe"))
+                .andExpect(MockMvcResultMatchers.view().name("recipe/recipeform"));
     }
 
     @Test
