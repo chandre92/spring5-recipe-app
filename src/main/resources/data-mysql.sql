@@ -1,3 +1,4 @@
+-- Data for profiles that use MySQL
 -- Read by spring boot data init
 INSERT INTO category (description) VALUES ('American');
 INSERT INTO category (description) VALUES ('Italian');
