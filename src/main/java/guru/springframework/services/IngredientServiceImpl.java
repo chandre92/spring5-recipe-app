@@ -34,10 +34,12 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientCommand findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId) {
-        return ingredientConverter.convertToCommand(
-                ingredientRepository.findByRecipeIdAndId(recipeId, ingredientId)
-        );
+    public IngredientCommand findByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
+//        return ingredientConverter.convertToCommand(
+//                ingredientRepository.findByRecipeIdAndId(recipeId, ingredientId)
+//        );
+        // TODO: 10.05.22 FIX ME
+        return new IngredientCommand();
     }
 
     @Override
@@ -60,7 +62,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void deleteById(Long recipeId, Long ingredientId) {
+    public void deleteById(String recipeId, String ingredientId) {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(NO_RECIPE_MESSAGE, recipeId)));
         Ingredient ingredientMatch = recipe.getIngredients().stream()

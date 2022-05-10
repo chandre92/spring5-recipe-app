@@ -10,5 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 public abstract class AbstractCommand {
-    private Long id;
+    private String id;
 }

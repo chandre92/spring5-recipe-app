@@ -1,20 +1,21 @@
 package guru.springframework.domain;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Data
 @EqualsAndHashCode(exclude = {"recipes"}, callSuper = true)
-@Entity
+@Document
 public class Category extends BaseEntity {
     private String description;
 
-    @ManyToMany(mappedBy = "categories")
+    @DBRef
     private Set<Recipe> recipes;
 
     @Override

@@ -24,9 +24,6 @@ public class IngredientConverter implements TwoWaysConverter<IngredientCommand, 
         ingredientCommand.setAmount(source.getAmount());
         ingredientCommand.setDescription(source.getDescription());
         ingredientCommand.setUnitOfMeasureCommand(unitOfMeasureConverter.convertToCommand(source.getUnitOfMeasure()));
-        if (source.getRecipe() != null) {
-            ingredientCommand.setRecipeId(source.getRecipe().getId());
-        }
 
         return ingredientCommand;
     }

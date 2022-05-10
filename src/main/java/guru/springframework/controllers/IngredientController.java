@@ -28,21 +28,21 @@ public class IngredientController {
     }
 
     @GetMapping("/recipe/{id}/ingredients")
-    public String listIngredients(@PathVariable Long id, Model model) {
+    public String listIngredients(@PathVariable String id, Model model) {
         model.addAttribute("recipe", recipeService.findCommandById(id));
 
         return "ingredient/list";
     }
 
     @GetMapping("/recipe/{recipeId}/ingredient/{ingredientId}/show")
-    public String showIngredient(@PathVariable Long recipeId, @PathVariable Long ingredientId, Model model) {
+    public String showIngredient(@PathVariable String recipeId, @PathVariable String ingredientId, Model model) {
         model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId));
 
         return "ingredient/show";
     }
 
     @GetMapping("/recipe/{recipeId}/ingredient/{ingredientId}/update")
-    public String updateRecipeIngredient(@PathVariable Long recipeId, @PathVariable Long ingredientId, Model model) {
+    public String updateRecipeIngredient(@PathVariable String recipeId, @PathVariable String ingredientId, Model model) {
         model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(
                 recipeId, ingredientId
         ));
@@ -64,7 +64,7 @@ public class IngredientController {
     }
 
     @GetMapping("/recipe/{recipeId}/ingredient/new")
-    public String newIngredient(@PathVariable Long recipeId, Model model) {
+    public String newIngredient(@PathVariable String recipeId, Model model) {
         if (!recipeService.isRecipeExists(recipeId)) {
             throw new IllegalArgumentException("Recipe does not exist, id: " + recipeId);
         }
@@ -80,7 +80,7 @@ public class IngredientController {
     }
 
     @GetMapping("/recipe/{recipeId}/ingredient/{ingredientId}/delete")
-    public String deleteIngredient(@PathVariable Long recipeId, @PathVariable Long ingredientId) {
+    public String deleteIngredient(@PathVariable String recipeId, @PathVariable String ingredientId) {
         ingredientService.deleteById(recipeId, ingredientId);
 
         return "redirect:/recipe/" + recipeId + "/ingredients";

@@ -13,6 +13,6 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 public class IngredientCommand extends AbstractDescribableCommand {
     private BigDecimal amount;
-    private Long recipeId;
+    private String recipeId;
     private UnitOfMeasureCommand unitOfMeasureCommand;
 }
